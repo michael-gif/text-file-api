@@ -1,0 +1,3 @@
+resource2,table
+hello,soup
+36,carpet
