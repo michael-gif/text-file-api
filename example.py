@@ -1,0 +1,12 @@
+import crossover
+a = crossover.api()
+print(a.link('database.txt'))
+print(a.post('resource1','blueberry'))
+print(a.post('resource2','table'))
+print(a.get(''))
+print(a.delete('resource1'))
+b = crossover.api()
+print(b.link('database.txt'))
+print(b.post('hello','soup'))
+print(b.post(36,'carpet'))
+print(b.get('36'))
