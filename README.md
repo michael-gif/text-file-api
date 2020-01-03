@@ -12,10 +12,10 @@ This script includes the functions:
 ## Setup  
 1. To get started, import the script into you own script as a module.  
 It doesn't matter wether you put this script into the python site packages folder, or in the same directory as your own code.  
-Use `import bluebook` to import the script.
+Use `import crossfile` to import the script.
 
 2. After importing the script, you must make an instance of the class so that python doesn't throw any errors.  
-For example, `a = bluebook.api()` will create an instance of the `api()` class called `a`.
+For example, `a = crossfile.api()` will create an instance of the `api()` class called `a`.
 
 ## Usage
 - The `link()` function take one parameter, which is the string name of the text file to be accessed.  
