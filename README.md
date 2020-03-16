@@ -18,7 +18,7 @@ Use `import crossfile` to import the script.
 For example, `a = crossfile.api()` will create an instance of the `api()` class called `a`.
 
 ## Usage
-- The `link()` function take one parameter, which is the string name of the text file to be accessed.  
+- The `link()` function takes one parameter, which is the string name of the text file to be accessed.  
 When used, it will return `'linked to: ' + self.dataname`, indicating that the script can communicate with the chosen file.  
 This function can be used again to change which text file is being accessed by the script, allowing you to access multiple text files with the same instance.
 
