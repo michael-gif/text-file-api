@@ -42,7 +42,7 @@ cf.delete('resource1')
 print(cf.get())
 ```
 
-**Output**:
+**Output**:  
 ![output](output.png)
 database.txt:  
 ![img.png](database.txt.png)
