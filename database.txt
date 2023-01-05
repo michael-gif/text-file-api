@@ -1,5 +1,2 @@
 resource2,table
 resource3,orange
-
-
-
