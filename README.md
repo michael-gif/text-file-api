@@ -43,7 +43,7 @@ print(cf.get())
 ```
 
 **Output**:  
-![output](output.png)
+![output](output.png)  
 database.txt:  
 ![img.png](database.txt.png)
 
