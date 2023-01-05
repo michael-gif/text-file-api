@@ -1,79 +1,82 @@
-'''
-the api is a class so make a new instance of it before use so it doesn't throw errors.
-for example: a = crossfile.api()
-
-a.get(<identifier>)  --> gets a resource from the database using an integer identifier
-a.post(<identifier>,<string data>) --> creates a new resource in the database
-a.delete(<identifier>) --> deletes a resource using an integer identifier
-'''
-class api(object):
+class Crossfile():
     def __init__(self):
-        self.dataname = ''
-    def link(self,databasename):
-        self.dataname = databasename
-        return 'linked to: ' + self.dataname
-    #gets a resource from the database
-    def get(self,identifier):
+        self.filename = ''
+
+    def link(self, filename):
+        '''
+        Link the current instance to a 'database' file
+        :param filename: full/relative path
+        :return: status
+        '''
+        self.filename = filename
+        return 'successfully linked to: ' + self.filename
+
+    def get(self, identifier):
+        '''
+        | Gets resource associated with the given identifier.
+        | If no identifier is specified, then the whole database is returned.
+        :param identifier: unique string
+        :return:  status
+        '''
         identifier = str(identifier)
-        if identifier == '':
-            f = open(self.dataname,'r')
-            lines = f.readlines()
-            for x in range(len(lines)):
-                lines[x] = lines[x].strip('\n')
-                lines[x] = lines[x].split(',')
-            return lines
-            f.close()
+        with open(self.filename) as file:
+            lines = file.readlines()
+        if not identifier:
+            return [tuple(line.strip('\n').split(',')) for line in lines]
+        for line in lines:
+            key, value = line.strip('\n').split(',')
+            if key == identifier:
+                return key, value
+        return f"resource {identifier} doesn't exist"
+
+    def post(self, identifier, resource):
+        '''
+        | Create a new resource in the database.
+        | If the given identifier already exists, the resource isn't added.
+        :param identifier: unique string
+        :param resource: anything
+        :return: status
+        '''
+        identifier = str(identifier)
+        with open(self.filename) as file:
+            lines = file.readlines()
+
+        can_write = False
+        if not lines:
+            can_write = True
         else:
-            identifier = str(identifier)
-            #gets all of the identifiers
-            with open(self.dataname,'r') as f:
-                lines = f.readlines()
-                identifiers = []
-                for line in lines:
-                    line = line.split(',')
-                    identifiers.append(line[0])
-            #finds the resource with the identifier, if it exists
-            if identifier in identifiers:
-                for line in lines:
-                    line = line.strip('\n')
-                    line = line.split(',')
-                    if line[0] == identifier:
-                        return line
-            else:
-                return '404 not found'
-    #creates a new resource and puts it in the database
-    def post(self,identifier,resource):
-        oktowrite = True
-        with open(self.dataname, "r") as f:
-            lines = f.readlines()
-            #check to see if databse is empty
-            if lines == []:
-                oktowrite = True
-            #if databse not empty then check to see if resource already exists
-            else:
-                for line in lines:
-                    line = line.strip('\n')
-                    line = line.split(',')
-                    if line[0] == str(identifier):
-                        oktowrite = False
-        if oktowrite == True:
-            with open(self.dataname, "a") as f:
-                f.write(str(identifier) + ',' + resource + '\n')
+            # check to see if identifier is already in one of the lines
+            for line in lines:
+                key, value = line.strip('\n').split(',')
+                if key == identifier:
+                    can_write = False
+
+        if can_write:
+            with open(self.filename, 'a') as file:
+                file.write(f"{identifier},{resource}\n")
             return 'resource added'
         else:
-            response = ['resource ' + str(identifier) + ' already exists']
-            return ''.join(response)
-    #deletes a resource
-    def delete(self,identifier):
-        with open(self.dataname, "r") as f:
-            lines = f.readlines()
-        with open(self.dataname, "w") as f:
+            return f"resource {identifier} already exists"
+
+    def delete(self, identifier):
+        '''
+        | Deletes the resource associated with the given identifier.
+        | If the given identifier doesn't exist, an error is returned
+        :param identifier: unique string
+        :return: status
+        '''
+        with open(self.filename) as file:
+            lines = file.readlines()
+
+        deleted_resource = False
+        with open(self.filename, 'w') as file:
+            file.seek(0)
             for line in lines:
-                line = line.strip('\n')
-                line = line.split(',')
-                if lines != []:
-                    if line[0] != str(identifier):
-                        f.write(','.join(line) + '\n')
+                key, value = line.strip('\n').split(',')
+                if key != identifier:
+                    file.write(line)
                 else:
-                    return '404 not found'
-            return 'resource removed'
+                    deleted_resource = True
+            file.truncate()
+
+        return 'resource removed' if deleted_resource else f"resource {identifier} doesn't exist"
