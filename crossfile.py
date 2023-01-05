@@ -11,7 +11,7 @@ class Crossfile():
         self.filename = filename
         return 'successfully linked to: ' + self.filename
 
-    def get(self, identifier: str):
+    def get(self, identifier: str = ''):
         '''
         | Gets resource associated with the given identifier.
         | If no identifier is specified, then the whole database is returned.
@@ -41,15 +41,12 @@ class Crossfile():
         with open(self.filename) as file:
             lines = file.readlines()
 
-        can_write = False
-        if not lines:
-            can_write = True
-        else:
-            # check to see if identifier is already in one of the lines
-            for line in lines:
-                key, value = line.strip('\n').split(',')
-                if key == identifier:
-                    can_write = False
+        # check to see if identifier is already in one of the lines
+        can_write = True
+        for line in lines:
+            key, value = line.strip('\n').split(',')
+            if key == identifier:
+                can_write = False
 
         if can_write:
             with open(self.filename, 'a') as file:
